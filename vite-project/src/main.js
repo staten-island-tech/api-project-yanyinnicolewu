@@ -52,6 +52,7 @@ async function getAllData() {
     } else {
       const data = await response.json();
       data.forEach((card) => console.log(card));
+      return data;
     }
   } catch (error) {
     console.log(error);
@@ -59,17 +60,17 @@ async function getAllData() {
 }
 getAllData();
 
-function inject(item) {
+const data = await response.json();
+
+function inject(data) {
   const container = document.querySelector(".container");
   const html = `
-    <div class="card" data-name="${item.name}" data-img="${item.img}" data-alt="${item.alt}" data-price="${item.price}">
-      <img class="card-img" src="${item.img}" alt="${item.alt}">
-      <h2 class="card-name">${item.name}</h2>
-      <p class="card-alt">${item.alt}</p>
-      <p class="card-price">Price: $${item.price}</p>
-      <button class="button">Add to Cart</button>
+    <div class="card"
+      <img class="card-img" src="${data.url}" >
+      <h2 class="card-name">${data.name}</h2>
+      <p class="card-alt">${data.alt}</p>
     </div>`;
   container.insertAdjacentHTML("afterbegin", html);
 }
 
-dogs.forEach((item) => inject(item));
+data.forEach((item) => inject(item));
