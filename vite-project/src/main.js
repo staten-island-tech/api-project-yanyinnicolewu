@@ -44,9 +44,7 @@ import "./style.css";
 
 async function getAllData() {
   try {
-    const response = await fetch(
-      "https://api.thecatapi.com/v1/images/search?limit=10"
-    );
+    const response = await fetch("https://api.artic.edu/api/v1/artworks");
     if (response.status != 200) {
       throw new Error(response);
     } else {
@@ -67,6 +65,19 @@ function inject(data) {
   const html = `
     <div class="card"
       <img class="card-img" src="${data.url}" >
+      <h2 class="card-name">${data.name}</h2>
+      <p class="card-alt">${data.alt}</p>
+    </div>`;
+  container.insertAdjacentHTML("afterbegin", html);
+}
+
+data.forEach((item) => inject(item));
+
+function inject(data) {
+  const container = document.querySelector(".container");
+  const html = `
+    <div class="card" 
+      <img class="card-img" src="${item.img}" alt="${item.alt}">
       <h2 class="card-name">${data.name}</h2>
       <p class="card-alt">${data.alt}</p>
     </div>`;
