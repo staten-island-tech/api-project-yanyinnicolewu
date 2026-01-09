@@ -56,20 +56,16 @@ async function getAllData() {
     console.log(error);
   }
 }
+getAllData();
+
+const data = await getAllData();
 
 function inject(item) {
   const container = document.querySelector(".container");
 
-  let imageUrl;
-  if (item.image_id) {
-    imageUrl = `https://www.artic.edu/iiif/2/${item.image_id}/full/843,/0/default.jpg`;
-  } else {
-    imageUrl = "";
-  }
-
   const html = `
     <div class="card"
-      <img class="card-img" src="${imageUrl}" alt="${item.title}">
+      <img class="card-img" src="${item.image_id}" alt="${item.title}">
       <h2 class="card-name">${item.title}</h2>
       <p class="card-alt">${item.artist_title || "Unknown artist"}</p>
     </div>`;
@@ -77,4 +73,10 @@ function inject(item) {
 }
 
 data.data.forEach((item) => inject(item));
-getAllData();
+
+document.getElementById("searchform").addEventListener("submit", function (e) {
+  e.preventDefault();
+  const value = document.getElementById("title").value.toLowerCase();
+  const container = document.querySelector(".container");
+  container.innerHTML = "";
+});
