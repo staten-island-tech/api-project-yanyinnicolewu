@@ -49,39 +49,32 @@ async function getAllData() {
       throw new Error(response);
     } else {
       const data = await response.json();
-      data.forEach((card) => console.log(card));
+      data.data.forEach((item) => inject(item));
       return data;
     }
   } catch (error) {
     console.log(error);
   }
 }
-getAllData();
 
-const data = await response.json();
-
-function inject(data) {
+function inject(item) {
   const container = document.querySelector(".container");
+
+  let imageUrl;
+  if (item.image_id) {
+    imageUrl = `https://www.artic.edu/iiif/2/${item.image_id}/full/843,/0/default.jpg`;
+  } else {
+    imageUrl = "";
+  }
+
   const html = `
     <div class="card"
-      <img class="card-img" src="${data.url}" >
-      <h2 class="card-name">${data.name}</h2>
-      <p class="card-alt">${data.alt}</p>
+      <img class="card-img" src="${imageUrl}" alt="${item.title}">
+      <h2 class="card-name">${item.title}</h2>
+      <p class="card-alt">${item.artist_title || "Unknown artist"}</p>
     </div>`;
   container.insertAdjacentHTML("afterbegin", html);
 }
 
-data.forEach((item) => inject(item));
-
-function inject(data) {
-  const container = document.querySelector(".container");
-  const html = `
-    <div class="card" 
-      <img class="card-img" src="${item.img}" alt="${item.alt}">
-      <h2 class="card-name">${data.name}</h2>
-      <p class="card-alt">${data.alt}</p>
-    </div>`;
-  container.insertAdjacentHTML("afterbegin", html);
-}
-
-data.forEach((item) => inject(item));
+data.data.forEach((item) => inject(item));
+getAllData();
