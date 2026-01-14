@@ -1,0 +1,70 @@
+const container = document.querySelector(".container");
+const form = document.getElementById("search-form");
+const input = document.getElementById("title");
+
+async function getAllData() {
+  try {
+    const response = await fetch("https://pokeapi.co/api/v2/pokemon?limit=50");
+    if (response.status != 200) {
+      throw new Error("Pokémon not found");
+    } else {
+      const data = await response.json();
+      data.results.forEach((item) => {
+        getitemDetails(item.url);
+      });
+      return data;
+    }
+  } catch (error) {
+    container.innerHTML = `<p class="text-red-500">${error.message}</p>`;
+    console.log(error);
+  }
+}
+
+async function getitemDetails(url) {
+  try {
+    const response = await fetch(url);
+    const data = await response.json();
+    inject(data);
+  } catch (error) {
+    console.log(error);
+  }
+}
+
+function inject(item) {
+  const html = `
+    <div class="bg-white p-4 rounded shadow text-center">
+    <div class="bg-gray-800 text-white p-4 rounded-lg shadow-lg text-center">
+      <h2 class="capitalize font-bold text-lg">${item.name}</h2>
+      <img src="${item.sprites.front_default}" class="mx-auto"/>
+      <p>Height: ${item.height}</p>
+      <p>Weight: ${item.weight}</p>
+    </div>`;
+  container.insertAdjacentHTML("afterbegin", html);
+}
+
+document
+  .getElementById("search-form")
+  .addEventListener("submit", async function (e) {
+    e.preventDefault();
+
+    const value = document.getElementById("title").value.toLowerCase();
+    const container = document.querySelector(".container");
+
+    container.innerHTML = "";
+
+    try {
+      const response = await fetch(
+        `https://pokeapi.co/api/v2/pokemon/${value}`
+      );
+
+      if (response.status != 200) {
+        throw new Error("Pokémon not found");
+      }
+      const data = await response.json();
+      inject(data);
+    } catch (error) {
+      container.innerHTML = `<p class="text-red-500">${error.message}</p>`;
+    }
+  });
+
+getAllData();
