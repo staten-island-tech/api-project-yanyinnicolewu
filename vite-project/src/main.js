@@ -42,41 +42,86 @@ import "./style.css";
 // }
 // getData(URL);
 
+const container = document.querySelector(".container");
+const form = document.getElementById("search-form");
+const input = document.getElementById("title");
+
 async function getAllData() {
   try {
-    const response = await fetch("https://api.artic.edu/api/v1/artworks");
+    const response = await fetch("https://pokeapi.co/api/v2/pokemon?limit=10");
     if (response.status != 200) {
-      throw new Error(response);
+      throw new Error("Pokémon not found");
     } else {
       const data = await response.json();
-      data.data.forEach((item) => inject(item));
+      data.results.forEach((item) => {
+        getitemDetails(item.url);
+      });
       return data;
     }
+  } catch (error) {
+    container.innerHTML = `<p class="text-red-500">${error.message}</p>`;
+    console.log(error);
+  }
+}
+
+async function getitemDetails(url) {
+  try {
+    const response = await fetch(url);
+    const data = await response.json();
+    inject(data);
   } catch (error) {
     console.log(error);
   }
 }
-getAllData();
-
-const data = await getAllData();
 
 function inject(item) {
-  const container = document.querySelector(".container");
-
   const html = `
-    <div class="card"
-      <img class="card-img" src="${item.image_id}" alt="${item.title}">
-      <h2 class="card-name">${item.title}</h2>
-      <p class="card-alt">${item.artist_title || "Unknown artist"}</p>
+    <div class="bg-white p-4 rounded shadow text-center">
+    <div class="bg-gray-800 text-white p-4 rounded-lg shadow-lg text-center">
+      <h2 class="capitalize font-bold text-lg">${item.name}</h2>
+      <img src="${item.sprites.front_default}" class="mx-auto"/>
+      <p>Height: ${item.height}</p>
+      <p>Weight: ${item.weight}</p>
     </div>`;
   container.insertAdjacentHTML("afterbegin", html);
 }
 
-data.data.forEach((item) => inject(item));
+document
+  .getElementById("search-form")
+  .addEventListener("submit", async function (e) {
+    e.preventDefault();
 
-document.getElementById("searchform").addEventListener("submit", function (e) {
-  e.preventDefault();
-  const value = document.getElementById("title").value.toLowerCase();
-  const container = document.querySelector(".container");
-  container.innerHTML = "";
-});
+    const value = document.getElementById("title").value.toLowerCase();
+    const container = document.querySelector(".container");
+
+    container.innerHTML = "";
+
+    try {
+      const response = await fetch(
+        `https://pokeapi.co/api/v2/pokemon/${value}`
+      );
+
+      if (response.status != 200) {
+        throw new Error("Pokémon not found");
+      }
+      const data = await response.json();
+      inject(data);
+    } catch (error) {
+      container.innerHTML = `<p class="text-red-500">${error.message}</p>`;
+    }
+  });
+
+getAllData();
+
+// const URL = "https://bible-api.com/data/web/random";
+
+// async function getData(URL) {
+//   try {
+//     const response = await fetch(URL);
+//     const data = await response.json();
+//     document.getElementById("api-response").text = data.text;
+//   } catch (error) {
+//     console.log(error);
+//   }
+// }
+// getData(URL);

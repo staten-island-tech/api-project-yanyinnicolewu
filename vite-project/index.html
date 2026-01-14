@@ -5,14 +5,24 @@
     <link rel="icon" type="image/svg+xml" href="/vite.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>vite-project</title>
+    <script src="https://cdn.tailwindcss.com"></script>
   </head>
-  <body>
+  <body class="min-h-screen flex items-center justify-center">
+    <h1 class="text-3xl font-bold text-center mb-6">Pokémon API Project</h1>
     <div class="container"></div>
     <h2 id="api-response"></h2>
-    <form id="searchform">
-      <label for="title">Search Artworks</label>
-      <input type="text" id="title" placeholder="Type a artwork name..." />
-      <button type="submit">Search</button>
+    <form
+      id="search-form"
+      class="sticky top-0 bg-gray-100 flex justify-end items-center gap-2 p-4 z-10"
+    >
+      <label for="title">Search Pokémon</label>
+      <input type="text" id="title" class="border p-2 rounded w-64" />
+      <button
+        type="submit"
+        class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600"
+      >
+        Search
+      </button>
     </form>
 
     <div id="app"></div>
