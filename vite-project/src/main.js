@@ -48,7 +48,7 @@ const input = document.getElementById("title");
 
 async function getAllData() {
   try {
-    const response = await fetch("https://pokeapi.co/api/v2/pokemon?limit=10");
+    const response = await fetch("https://pokeapi.co/api/v2/pokemon?limit=25");
     if (response.status != 200) {
       throw new Error("Pokémon not found");
     } else {
